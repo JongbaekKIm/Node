@@ -1,3 +1,6 @@
+//계산기 객체를 모듈로 구성
+//계산기 객체가 EventEmitter를 상속하면 emit과 on 메소드 사용가능
+
 var util = require("util");
 var EventEmitter = require("events").EventEmitter;
 var Calc = function(){
