@@ -33,3 +33,14 @@ var dirname = path.dirname(filename);
 var basename = path.basename(filename);
 var extname = path.extname(filename);
 console.log("디렉터리 : %s, 파일이름 : %s, 확장자 : %s", dirname, basename, extname);
+
+var url = require("url");
+var curURL = url.parse("https://search.naver.com/search.naver?where=nexearch&sm=top_hty&fbm=1&ie=utf8&query=자바스크립트");
+var curStr = url.format(curURL);
+console.log("주소 문자열 : %s", curStr);
+console.dir(curURL);
+
+var querystring = require("querystring");
+var param = querystring.parse(curURL.query);
+console.log("요청 query 중 파라미터의 값 : %s", param.query);
+console.log("원본 요청 파라미터 : %s", querystring.stringify(param));
