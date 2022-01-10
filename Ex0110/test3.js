@@ -74,9 +74,3 @@ infile.on("end", function(){
 //     console.log("docs 폴더를 삭제");
 // })
 
-var http = require("http");
-var server = http.createServer();
-var port = 3000;
-server.listen(port, function(){ // listen : 서버한테 실행전까지 대기시킨다.
-    console.log('웹 서버 시작 : %d', port);
-});
