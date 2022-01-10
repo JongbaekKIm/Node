@@ -62,3 +62,21 @@ infile.on("end", function(){
         console.log("파일 쓰기 종료");
     })
 })
+// //mkdir로 폴더 만들기
+// fs.mkdir('./docs', 0666, function(err){
+//     if(err) throw err;
+//     console.log("새로운 docs 폴더를 생성");
+// })
+
+// //rmdir로 폴더 지우기
+// fs.rmdir("./docs", function(err){
+//     if(err) throw err;
+//     console.log("docs 폴더를 삭제");
+// })
+
+var http = require("http");
+var server = http.createServer();
+var port = 3000;
+server.listen(port, function(){ // listen : 서버한테 실행전까지 대기시킨다.
+    console.log('웹 서버 시작 : %d', port);
+});
