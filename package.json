@@ -9,6 +9,9 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "cookie": "^0.4.1",
+    "cookie-parser": "^1.4.6",
+    "express": "^4.17.2",
     "nconf": "^0.11.3",
     "os": "^0.1.2"
   }
