@@ -36,6 +36,8 @@ app.all('*', function(req, res){
     res.status(404).send('<h1>ERROR-페이지를 찾을 수 없습니다. </h1>');
 })
 
+
+
 app.listen(3000, function () {
     console.log('Express 서버가 3000번 포트에서 start.');
 })
