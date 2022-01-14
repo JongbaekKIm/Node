@@ -17,14 +17,14 @@ var addMember = function (database, userId, userPwd, userName, age, callback) {
 }
 
 var updateMember = function (database, userId, userPwd, userName, age, callback) {
-    console.log('updateMember 호출됨 : ' + userId + ', ' + userPwd+', '+userName);
+    console.log('updateMember 호출됨 : ' + userId + ', ' + userPwd + ', ' + userName);
     //Members collection 참조
-    database.MemberModel.updateOne({ "userId": userId}, {$set: {"userPwd" : userPwd, "userName": userName, "age": age}},function (err, result) {
+    database.MemberModel.updateOne({ "userId": userId }, { $set: { "userPwd": userPwd, "userName": userName, "age": age } }, function (err, result) {
         if (err) {//에러 방생시 콜백 함수를 호출하면서 에러 객체 전달
             callback(err, null);
             return;
         }
-        if (result.modifiedCount>0) { 
+        if (result.modifiedCount > 0) {
             console.log('사용자 레코드 업데이트됨 : ' + result.modifiedCount);
         } else {
             console.log("추가 되지 않았음.")
@@ -88,17 +88,29 @@ var procLogin = function (req, res) {
     //데이터베이스 객체가 초기화된 경우, authMember 함수 호출하여 사용자 인증
     if (database) {
         authMember(database, userId, userPwd, function (err, results) {
-            if (err) { throw err; }
+            if (err) { }
             //조회된 레코드가 있으면 성공 응답 전송
             if (results) {
-                res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
-                res.write("<h1>로그인 성공</h1>");
-                res.end();
-            } else {//조회된 레코드가 없는 경우 실패 응답 전송
+                var context = { userId: userId, userPwd: userPwd };
+                req.app.render("loginSuccess", context, function (err, html) {
+                    if (err) {
+                        console.error('뷰 렌더링 중 오류 발생 : ' + err.stack);
+                        res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
+                        res.write("<h2>뷰 렌더링 중 오류 발생 </h2>");
+                        res.write('<p>' + err.stack + '</p>');
+                        res.end();
+                        return;
+                    }
+                    console.log('rendered : ' + html);
+                    res.end(html);
+                });
+            }
+            else {//조회된 레코드가 없는 경우 실패 응답 전송
                 res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
                 res.write("<h1>로그인 실패</h1>");
                 res.end();
             }
+
         })
     } else {
         res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
@@ -106,34 +118,85 @@ var procLogin = function (req, res) {
         res.end();
     }
 }
+//문제의 코드
 var procAddMember = function (req, res) {
     console.log("모듈 내에 있는 procAddMember 호출됨");
     var database = req.app.get('database');
+
     var userId = req.body.userId || req.query.UserId;
     var userPwd = req.body.userPwd || req.query.UserPwd;
     var userName = req.body.userName || req.query.UserName;
     var age = req.body.age || req.query.age;
     console.log('요청 파라미터 : ' + userId + ', ' + userPwd + ', ' + userName + ', ' + age);
-    if (database) {
+    if (database) { 
         addMember(database, userId, userPwd, userName, age, function (err, result) {
             if (err) { throw err; }
             //조회된 레코드가 있으면 성공 응답 전송
             if (result) {
-                res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' })
-                res.write("<h1>회원가입 성공</h1>");
-                res.end();
+                res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
+               // res.end();
+                var context = { userId: userId, userPwd: userPwd, userName:userName, age:age };
+                req.app.render("addMember", context, function (err, html) {
+                    if (err) {
+                        console.error('뷰 렌더링 중 오류 발생 : ' + err.stack);
+                        res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
+                        res.write("<h2>뷰 렌더링 중 오류 발생 </h2>");
+                        res.write('<p>' + err.stack + '</p>');
+                        res.end();
+                        return;
+                    }
+                    console.log('rendered : ' + html);
+                    res.end(html);
+                });
             } else {//결과 객체가 없으면 실패응답 전송
                 res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
                 res.write("<h1>회원가입 실패</h1>");
                 res.end();
             }
-        })
+        }) //addeMember 콜백 끝
     } else {//데이터베이스 객체가 초기화되지 않은 경우 실패 응답 전송
         res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
         res.write("<h1>데이터 베이스 연결 실패</h1>");
         res.end();
     }
 }
+
+//from hm
+// var procAddMember = function(req, res){
+//     console.log('/process/addMember 호출');
+//     var database = req.app.get('database');
+    
+//     var userId = req.body.userId || req.query.userId;
+//     var userPwd = req.body.userPwd || req.query.userPwd;
+//     var userName = req.body.userName || req.query.userName;
+//     var userAge = req.body.userAge || req.query.userAge;
+//     console.log("요청 파라미터 : " + userId + ', ' + userPwd+ ', ' + userName + ', ' + userAge);
+//     //데이터 베이스 객체가 초기화된 경우, authMember 함수 호출하여 사용자 인증
+    
+//     // var user = new MemberModel({"userId":userId, "userPwd":userPwd, "userName":userName, "userAge":userAge});
+//     if(database.db){
+//         addMember(database, userId, userPwd, userName, userAge, function(err, results){
+//             if(err) {throw err;}
+//             //조회된 결과가 있으면 성공 응답 전송
+//             if(results){
+                
+//                 console.dir(results);
+//                 res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
+//                 res.write('<h1>가입 성공</h1>');
+//                 res.end();
+//             }else{
+//                 res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
+//                 res.write('<h1>가입 실패</h1>');
+//                 res.end();
+//             }
+//         });
+//     }else{
+//         res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
+//         res.write('<h1>데이터 베이스 연결 실패</h1>');
+//         res.end();
+//     }
+// }
+
 var procListMember = function (req, res) {
     console.log("모듈 내에 있는 procListMember 호출됨");
     var database = req.app.get('database');
@@ -141,7 +204,7 @@ var procListMember = function (req, res) {
     //데이터베이스 객체가 초기화된 경우, authMember 함수 호출하여 사용자 인증
     if (database) {
         //1. 모든 사용자 검색
-        MemberModel.findAll(function (err, results) {
+        database.MemberModel.findAll(function (err, results) {
             if (err) {
                 console.error('사용자 리스트 조회 중 오류 발생 : ' + err.stack);
                 res.writeHead('200', { 'Content-Type': 'text/html; charset=utf8' });
@@ -152,19 +215,19 @@ var procListMember = function (req, res) {
             }
             //조회된 레코드가 있으면 성공 응답 전송
             if (results) {
-                console.dir(results);
-                res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
-                res.write("<h1>사용자 리스트</h1>");
-                res.write("<div><ul>")
-                for (let i = 0; i < results.length; i++) {
-                    var curUserId = results[i]._doc.userId;
-                    var curUserName = results[i]._doc.userName;
-                    var curUserPwd = results[i]._doc.userPwd;
-                    var curUserAge = results[i]._doc.age;
-                    var curUserRegDate = results[i]._doc.regDate;
-                    var curUserUpdateDate = results[i]._doc.updateDate;
-                    res.write("<li>#" + i + ' : ' + curUserId + ', ' + curUserName + ', ' + curUserPwd + ', ' + curUserAge + ', ' + curUserRegDate + ', ' + curUserUpdateDate + '</li>');
-                }
+                var context = { results : results };
+                req.app.render("listMember", context, function (err, html) {
+                    if (err) {
+                        console.error('뷰 렌더링 중 오류 발생 : ' + err.stack);
+                        res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
+                        res.write("<h2>뷰 렌더링 중 오류 발생 </h2>");
+                        res.write('<p>' + err.stack + '</p>');
+                        res.end();
+                        return;
+                    }
+                    console.log('rendered : ' + html);
+                    res.end(html);
+                });
 
             } else {//조회된 레코드가 없는 경우 실패 응답 전송
                 res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
@@ -179,8 +242,8 @@ var procListMember = function (req, res) {
     }
 }
 
-var procUpdateMember = function(req, res){
-    var write=res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
+var procUpdateMember = function (req, res) {
+    var write = res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
     console.log('/process/updateMember 호출됨')
     var database = req.app.get('database');
     var userId = req.body.userId || req.query.UserId;
@@ -188,24 +251,24 @@ var procUpdateMember = function(req, res){
     var userName = req.body.userName || req.query.userName;
     var age = req.body.age || req.query.age;
 
-    console.log('요청 파라미터 : '+ userId +', '+userPwd+', '+userName);
-    if(database){
-        updateMember(database, userId, userPwd, userName, age, function(err, result){
-            if(err){throw err;}
+    console.log('요청 파라미터 : ' + userId + ', ' + userPwd + ', ' + userName);
+    if (database) {
+        updateMember(database, userId, userPwd, userName, age, function (err, result) {
+            if (err) { throw err; }
             //조회된 레코드가 있으면 성공 응답 전송
-            if(result && result.modifiedCount>0){
+            if (result && result.modifiedCount > 0) {
                 // res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' })
                 write;
                 res.write("<h1>회원정보 수정 성공</h1>");
                 res.end();
-            }else{//결과 객체가 없으면 실패응답 전송
+            } else {//결과 객체가 없으면 실패응답 전송
                 // res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
                 write;
                 res.write("<h1>회원정보 수정 실패</h1>");
                 res.end();
             }
         })
-    }else{//데이터베이스 객체가 초기화되지 않은 경우 실패 응답 전송
+    } else {//데이터베이스 객체가 초기화되지 않은 경우 실패 응답 전송
         // res.writeHead('200', { 'Content-Type': 'text/html;charset=utf8' });
         write;
         res.write("<h1>데이터 베이스 연결 실패</h1>");

@@ -15,5 +15,21 @@
         나이 <input type="number" name="age"><br>
         <input type="submit" value="가입하기">
     </form>
+    <form action="/process/listMember" method="post">
+        <input type="submit" value="전체회원 목록 가져오기"/>
+    </form> 
+    <button id="button" onclick=button()>전체회원 목록 가져오기</button>
+</body>
+
+
+<script>
+    $(document).ready(function(){
+        function button() {
+            $('#button').hide();
+            $('#list').show();
+        }
+    })
+
+</script>
 </body>
 </html>

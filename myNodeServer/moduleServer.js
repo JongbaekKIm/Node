@@ -25,6 +25,9 @@ let database; let MemberSchema; let MemberModel;
 
 //기본 속성 설정
 app.set('port', process.env.PORT || 3000);
+//익스프레스에서 뷰 엔진을 ejs로 설정
+app.set('/views', __dirname +"/views");
+app.set('view engine', 'ejs');
 //body-parser를 이용해 application/x-www-form-urlencoded 파싱
 app.use(bodyParser.urlencoded({ extended: false }));
 //body-parser를 이용해 application/json 파싱
