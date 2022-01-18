@@ -134,6 +134,7 @@ router.route('/process/authMember').post(member.procLogin);
 router.route('/process/addMember').post(member.procAddMember);
 router.route('/process/listMember').post(member.procListMember);
 router.route('/process/updateMember').post(member.procUpdateMember);
+router.route('/process/search')
 
 app.use("/", router);
 

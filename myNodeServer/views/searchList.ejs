@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+    <link href="../semantic/semantic.min.css" rel="stylesheet"/>
+    <script src="../semantic/semantic.min.js"></script>
+
+</head>
+
+<body>
+    <div class="container">
+        <br>
+        <div class="ui raisd segment">
+            <a class='ui blue ribbon label'>검색 리스트</a>
+            <br><br>
+        </div>
+
+        <% for(var i=0; i<newsArray.length; i++){ 
+            var curTitle=newsArray[i].title; 
+            var curLink=newsArray[i].link;
+            var curDescription=newsArray[i].description; 
+            var curPubDate=newsArray[i].pubDate; %>
+
+            <div class="ui blue fluid card">
+                <div class="content">
+                    <div class="header">
+                        <a href='<%=curLink%>'> 제목 : <%=curTitle%></a>
+                    </div>
+                    <div class="description">
+                        <br>
+                        <p>내용 : <%=curDescription%>
+                        </p>
+                    </div>
+                    <div class="meta">
+                        <span class="right floated time"> 날짜 : <%=curPubDate%></span>
+                    </div>
+                </div> <!-- content -->
+            </div> <!-- ui blue fluid card -->
+            <% } %>
+    </div> <!-- container -->
+</body>
+
+</html>

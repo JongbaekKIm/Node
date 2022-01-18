@@ -118,7 +118,7 @@ var procLogin = function (req, res) {
         res.end();
     }
 }
-//문제의 코드
+
 var procAddMember = function (req, res) {
     console.log("모듈 내에 있는 procAddMember 호출됨");
     var database = req.app.get('database');
@@ -160,42 +160,6 @@ var procAddMember = function (req, res) {
         res.end();
     }
 }
-
-//from hm
-// var procAddMember = function(req, res){
-//     console.log('/process/addMember 호출');
-//     var database = req.app.get('database');
-    
-//     var userId = req.body.userId || req.query.userId;
-//     var userPwd = req.body.userPwd || req.query.userPwd;
-//     var userName = req.body.userName || req.query.userName;
-//     var userAge = req.body.userAge || req.query.userAge;
-//     console.log("요청 파라미터 : " + userId + ', ' + userPwd+ ', ' + userName + ', ' + userAge);
-//     //데이터 베이스 객체가 초기화된 경우, authMember 함수 호출하여 사용자 인증
-    
-//     // var user = new MemberModel({"userId":userId, "userPwd":userPwd, "userName":userName, "userAge":userAge});
-//     if(database.db){
-//         addMember(database, userId, userPwd, userName, userAge, function(err, results){
-//             if(err) {throw err;}
-//             //조회된 결과가 있으면 성공 응답 전송
-//             if(results){
-                
-//                 console.dir(results);
-//                 res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
-//                 res.write('<h1>가입 성공</h1>');
-//                 res.end();
-//             }else{
-//                 res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
-//                 res.write('<h1>가입 실패</h1>');
-//                 res.end();
-//             }
-//         });
-//     }else{
-//         res.writeHead('200',{'Content-Type':'text/html;charset=utf8'});
-//         res.write('<h1>데이터 베이스 연결 실패</h1>');
-//         res.end();
-//     }
-// }
 
 var procListMember = function (req, res) {
     console.log("모듈 내에 있는 procListMember 호출됨");
